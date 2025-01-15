@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('babs', function (Blueprint $table) {
             $table->id();
-            $table->integer('book_id');
+            $table->unsignedBigInteger('book_id'); // Foreign key ke tabel books
             $table->integer('bab_number');
             $table->string('sub_title');
             $table->text('body');
             $table->timestamps();
+
+            // Tambahkan foreign key
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
         });
+
     }
 
     /**

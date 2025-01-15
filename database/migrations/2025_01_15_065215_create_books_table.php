@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->unsignedBigInteger('user_id'); // Foreign key ke tabel users
             $table->string('status');
             $table->string('title');
             $table->text('sinopsis');
-            $table->text('cover_book');
+            $table->text('cover_book')->nullable();
             $table->timestamps();
+
+            // Tambahkan foreign key
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

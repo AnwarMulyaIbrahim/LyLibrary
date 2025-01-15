@@ -12,10 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('likes', function (Blueprint $table) {
-            $table->id();
-            $table->integer('like_book_id');
+            $table->unsignedBigInteger('like_book_id'); // Foreign key ke tabel books
             $table->timestamps();
+
+            // Tambahkan foreign key
+            $table->foreign('like_book_id')->references('id')->on('books')->onDelete('cascade');
         });
+
     }
 
     /**
