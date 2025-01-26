@@ -18,9 +18,10 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // Google
-Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-
+Route::middleware(['web'])->group(function () {
+    Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+    Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+});
 
 // login & register
 Route::post('/register', [AuthController::class, 'register']);
