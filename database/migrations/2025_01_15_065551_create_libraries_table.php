@@ -11,14 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('librarys', function (Blueprint $table) {
+        Schema::create('libraries', function (Blueprint $table) {
+            $table->id(); // Primary key
             $table->unsignedBigInteger('library_book_id'); // Foreign key ke tabel books
+            $table->unsignedBigInteger('user_id'); // Foreign key ke tabel users
             $table->timestamps();
 
             // Tambahkan foreign key
             $table->foreign('library_book_id')->references('id')->on('books')->onDelete('cascade');
-        });
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+            // Hindari duplikasi (user hanya dapat menambahkan satu buku tertentu ke library mereka sekali)
+            $table->unique(['library_book_id', 'user_id']);
+        });
     }
 
     /**
