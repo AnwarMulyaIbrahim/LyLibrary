@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use \Illuminate\Support\Facades\Log;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -13,24 +14,34 @@ class AuthController extends Controller
      * Register a new user.
      */
     public function register(Request $request)
-    {
-        $validatedData = $request->validate([
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+{
+    $validatedData = $request->validate([
+        'username' => 'required|string|max:255|unique:users',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
 
-        $user = User::create([
-            'username' => $validatedData['username'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-        ]);
+    Log::info('Validated Data: ', $validatedData); // Tambahkan log untuk debug
 
+    $user = User::create([
+        'username' => $validatedData['username'],
+        'email' => $validatedData['email'],
+        'password' => Hash::make($validatedData['password']),
+    ]);
+
+    if (!$user) {
+        Log::error('User registration failed!');
         return response()->json([
-            'message' => 'User registered successfully',
-            'user' => $user,
-        ], 201);
+            'message' => 'Failed to register user',
+        ], 500);
     }
+
+    return response()->json([
+        'message' => 'User registered successfully',
+        'user' => $user,
+    ], 201);
+}
+
 
     /**
      * Login a user.
